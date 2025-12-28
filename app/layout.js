@@ -1,27 +1,27 @@
-import localFont from "next/font/local";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
 });
 
 export const metadata = {
-  title: "Music Downloader",
-  description: "Download your favorite music instantly to your device.",
+  title: "Melodix | Premium Music Downloader",
+  description: "Experience music like never before. High-quality streaming and downloads.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
+          rel="stylesheet"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${outfit.variable} font-sans antialiased bg-black text-white selection:bg-primary selection:text-white`}
       >
         {children}
       </body>

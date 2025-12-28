@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: #000000;
+    --foreground: #ffffff;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -18,4 +25,143 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #282828;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3e3e3e;
+}
+
+@keyframes playing-bar {
+
+  0%,
+  100% {
+    height: 4px;
+    transform: translateY(0);
+  }
+
+  50% {
+    height: 20px;
+    transform: translateY(-2px);
+  }
+}
+
+.animate-playing-bar {
+  animation: playing-bar 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes beat {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-beat {
+  animation: beat 0.6s ease-in-out infinite;
+}
+
+@keyframes card-beat {
+
+  0%,
+  100% {
+    transform: scale(1);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  50% {
+    transform: scale(1.002);
+    background: rgba(29, 185, 84, 0.03);
+  }
+}
+
+.animate-card-beat {
+  animation: card-beat 0.8s ease-in-out infinite;
+}
+
+@keyframes image-beat {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px rgba(29, 185, 84, 0);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(29, 185, 84, 0.3);
+  }
+}
+
+.animate-image-beat {
+  animation: image-beat 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 2s linear infinite;
+}
+
+@keyframes aura {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba(29, 185, 84, 0.2));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 15px rgba(29, 185, 84, 0.5));
+  }
+}
+
+.animate-aura {
+  animation: aura 1.5s ease-in-out infinite;
 }
