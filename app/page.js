@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import Player from "@/components/Player";
@@ -44,6 +44,8 @@ export default function Home() {
 
     if (savedSong) {
       try {
+        // Hydrate browser-only persisted state after mount to avoid SSR mismatch.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentSong(JSON.parse(savedSong));
       } catch (e) { }
     }
@@ -76,9 +78,9 @@ export default function Home() {
     if (activeTab === 'artists' && artistData.list.length === 0) {
       fetchArtists(1);
     }
-  }, [activeTab]);
+  }, [activeTab, artistData.list.length, trendingData.songs.length]);
 
-  const fetchTrending = async (page) => {
+  async function fetchTrending(page) {
     const isInitial = page === 1;
     if (isInitial) setLoading(true);
     else setLoadingMore(true);
@@ -97,9 +99,9 @@ export default function Home() {
       if (isInitial) setLoading(false);
       else setLoadingMore(false);
     }
-  };
+  }
 
-  const fetchArtists = async (page) => {
+  async function fetchArtists(page) {
     const isInitial = page === 1;
     if (isInitial) setLoading(true);
     else setLoadingMore(true);
@@ -119,7 +121,7 @@ export default function Home() {
       if (isInitial) setLoading(false);
       else setLoadingMore(false);
     }
-  };
+  }
 
   // Save to localStorage
   useEffect(() => {
@@ -146,7 +148,7 @@ export default function Home() {
     });
   };
 
-  const handleSearch = async (searchQuery, keepTab = false) => {
+  async function handleSearch(searchQuery, keepTab = false) {
     if (!searchQuery) return;
     setQuery(searchQuery);
     setLoading(true);
@@ -173,7 +175,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const playSong = async (song) => {
     // If it's already playing, just toggle
@@ -493,6 +495,7 @@ export default function Home() {
         <div className="flex gap-4">
           <img
             src={item.image?.[item.image?.length - 1]?.url || item.image?.[0]?.url}
+            alt={decodeHtml(item.name || item.title || 'Cover art')}
             className="w-24 h-24 rounded-xl shadow-lg border border-white/10"
           />
           <div className="flex-1">

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { decodeHtml } from "@/lib/api";
 
 export default function Player({ currentSong, isPlaying, onTogglePlay, onNext, onPrev, isFavorite, onToggleFavorite }) {
@@ -9,6 +9,23 @@ export default function Player({ currentSong, isPlaying, onTogglePlay, onNext, o
     const [isDownloading, setIsDownloading] = useState(false);
     const audioRef = useRef(null);
     const progressInterval = useRef(null);
+
+    const stopTimer = useCallback(() => {
+        if (progressInterval.current) clearInterval(progressInterval.current);
+    }, []);
+
+    const startTimer = useCallback(() => {
+        stopTimer();
+        progressInterval.current = setInterval(() => {
+            if (audioRef.current) {
+                const cur = audioRef.current.currentTime;
+                const dur = audioRef.current.duration;
+                const p = (cur / dur) * 100;
+                setProgress(p || 0);
+                setCurrentTime(cur || 0);
+            }
+        }, 1000);
+    }, [stopTimer]);
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -41,24 +58,7 @@ export default function Player({ currentSong, isPlaying, onTogglePlay, onNext, o
         }
 
         return () => stopTimer();
-    }, [currentSong, isPlaying]);
-
-    const startTimer = () => {
-        stopTimer();
-        progressInterval.current = setInterval(() => {
-            if (audioRef.current) {
-                const cur = audioRef.current.currentTime;
-                const dur = audioRef.current.duration;
-                const p = (cur / dur) * 100;
-                setProgress(p || 0);
-                setCurrentTime(cur || 0);
-            }
-        }, 1000);
-    };
-
-    const stopTimer = () => {
-        if (progressInterval.current) clearInterval(progressInterval.current);
-    };
+    }, [currentSong, isPlaying, startTimer, stopTimer]);
 
     const handleSeek = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
